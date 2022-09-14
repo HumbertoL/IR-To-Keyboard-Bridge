@@ -11,6 +11,11 @@ For example, you can use this to control an NVidia Shield without using HDMI CEC
  - USB cable
 
  That's it!
+ 
+Depending on your module, you should be able to connect it directly to the board like this. Double check that the pintout on the sensor matches this before attempting this.
+ 
+ ![Micro_IR_Connection](https://user-images.githubusercontent.com/8048702/190041020-3f523a0b-dd62-477c-895a-ea116d76ab17.png)
+
 
  # Usage
 
