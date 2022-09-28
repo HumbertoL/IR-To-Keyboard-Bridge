@@ -1,4 +1,4 @@
-# IR_TO_KEYBOARD_BRIDGE
+# IR to Keyboard Bridge
 This sketch allows you to convert incoming IR signals to Keyboard Inputs.
 
 This is useful for controlling USB enabled devices with a TV remote.
