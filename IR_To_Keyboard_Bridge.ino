@@ -33,6 +33,9 @@ IRkeyboardMappings keyboardMappings[] = {
   // add additional mappings here
 };
 
+// In some cases, holding down the button will send Code 0.
+// We can simulate pressing the button multiple times if we track the previous code.
+int prevKeyboardCode = 0;
 
 void setup() {
   // The board layour might make it easier to supply power via IO pin instead of 5V rail
@@ -58,29 +61,41 @@ void loop() {
       Serial.println(code);
     }
 
-    processIrCode(code);
+    int keyboardCode = processIrCode(code, prevKeyboardCode);
+
+    if (keyboardCode != 0) {
+      prevKeyboardCode = keyboardCode;
+      pressKey(keyboardCode);
+    }
 
     irrecv.resume();  // Restart the ISR state machine and Receive the next value
   }
 }
 
-void processIrCode(uint32_t code) {
+int processIrCode(uint32_t code, int prevKeyboardCode) {
   // array size is total size divided by the size of a single element
   int size = sizeof keyboardMappings / sizeof keyboardMappings[0];
+
+  // If the IR code 0 is sent, repeat the previous keypress
+  if (code == 0)
+  {
+    return prevKeyboardCode;
+  }
 
   // Go through each mapping and press the corresponding key if it exists
   for (int i = 0; i < size; i++) {
     IRkeyboardMappings mapping = keyboardMappings[i];
     if (code == mapping.IRCode) {
-      pressKey(mapping.KeyboardCode);
-      break;
+      return mapping.KeyboardCode;
     }
   }
+
+  return 0;
 }
 
 void pressKey(int keyCode) {
   Keyboard.press(keyCode);
-  delay(50);
+  delay(10);
   Keyboard.releaseAll();
 }
 
